@@ -69,6 +69,147 @@ Spark是一个有着丰富表达的，轻量级且开放的纯Java（和Kotlin�
 
 ### 2. 代码示例
 
+#### Getting started
+当前版本为2.7.1，更多版本可以参见[releases](https://github.com/perwendel/spark/releases)
+
+`compile group: 'com.sparkjava', name: 'spark-core', version: '2.7.1'`
+
+```java
+public class SparkJavaApplication {
+  public static void main(String[] args) {
+    get("/hello", (req, res) -> "Hello World");
+  }
+}
+```
+
+#### 更多例子
+
+```java
+public class SparkJavaApplication {
+
+  public static void main(String[] args) {
+    port(4567);
+    get("/hello", (req, res) -> "Hello World");
+
+    get("/users/:name", (request, response) -> "Selected user: " + request.params(":name"));
+
+    get("/news/:section", (request, response) -> {
+      response.type("text/xml");
+      return "<?xml version=\"1.0\" encoding=\"UTF-8\"?><news>" + request.params("section") + "</news>";
+    });
+
+    get("/protected", (request, response) -> {
+      halt(403, "I don't think so!!!");
+      return null;
+    });
+
+    get("/redirect", (request, response) -> {
+      response.redirect("/news/world");
+      return null;
+    });
+
+    get("/", (request, response) -> "root");
+    
+    get("/hello2", "application/json", (request, response) -> { 
+      return "{\"message\": \"Hello World\"}";
+    });
+  }
+}
+
+```
+你可以使用port()函数定义开启的端口。
+同时Spark参数的传递是以`:param`的形式传递的，获取方式同样是常用的request.params("paramName")。
+在定义接口的时候还可以定义接口接收的类型，比如"application/json"。
+
+此外，除了get方法，其他比如post、put等方法如下例所示：
+
+```java
+public class Books {
+
+  /**
+   * Map holding the books
+   */
+  public static Map<String, Book> books = new HashMap<>();
+
+  // Creates a new book resource, will return the ID to the created resource
+  // author and title are sent as query parameters e.g. /books?author=Foo&title=Bar
+  public static void main(String[] args) {
+    post("/books", (request, response) -> {
+      String author = request.queryParams("author");
+      String title = request.queryParams("title");
+      Book book = new Book(author, title);
+      Random random = new Random();
+      int id = random.nextInt(Integer.MAX_VALUE);
+      books.put(String.valueOf(id), book);
+
+      response.status(201); // 201 Created
+      return id;
+    });
+
+    // Gets the book resource for the provided id
+    get("/books/:id", (request, response) -> {
+      Book book = books.get(request.params(":id"));
+      if (book != null) {
+        return "Title: " + book.getTitle() + ", Author: " + book.getAuthor();
+      } else {
+        response.status(404); // 404 Not found
+        return "Book not found";
+      }
+    });
+
+    // Updates the book resource for the provided id with new information
+    // author and title are sent as query parameters e.g. /books/<id>?author=Foo&title=Bar
+    put("/books/:id", (request, response) -> {
+      String id = request.params(":id");
+      Book book = books.get(id);
+      if (book != null) {
+        String newAuthor = request.queryParams("author");
+        String newTitle = request.queryParams("title");
+        if (newAuthor != null) {
+          book.setAuthor(newAuthor);
+        }
+        if (newTitle != null) {
+          book.setTitle(newTitle);
+        }
+        return "Book with id '" + id + "' updated";
+      } else {
+        response.status(404); // 404 Not found
+        return "Book not found";
+      }
+    });
+
+    // Deletes the book resource for the provided id
+    delete("/books/:id", (request, response) -> {
+      String id = request.params(":id");
+      Book book = books.remove(id);
+      if (book != null) {
+        return "Book with id '" + id + "' deleted";
+      } else {
+        response.status(404); // 404 Not found
+        return "Book not found";
+      }
+    });
+
+    // Gets all available book resources (id's)
+    get("/books", (request, response) -> {
+      StringBuilder ids = new StringBuilder();
+      for (String id : books.keySet()) {
+        ids.append(id).append(" ");
+      }
+      return ids.toString();
+    });
+
+  }
+}
+```
+
+更多例子可以参考[github项目](https://github.com/perwendel/spark/)
+
+
+### 总结
+
+Spark 是一个非常轻量级的web框架，若你不需要那么多的功能，只是提供简单的web接口，那么Spark是个非常适合的选择。另外，Spark同样适用于微服务的架构，它的功能不止于此，若是有兴趣，可以自行探索。
+本文只是一篇引子，为的是我不用再引用所占内存较大Spring的web的框架，项目启动速度飞升。
 
 ### 参考
 
