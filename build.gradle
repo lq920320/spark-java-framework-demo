@@ -1,6 +1,6 @@
 buildscript {
   ext {
-    springBootVersion = '1.5.10.RELEASE'
+    springBootVersion = '2.1.4.RELEASE'
   }
   repositories {
     maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
@@ -13,10 +13,9 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
 
-jar {
-  baseName = 'spark-java'
-  version = '1.0-SNAPSHOT'
-}
+archivesBaseName = "spark-java"
+version '1.0-SNAPSHOT'
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -30,11 +29,9 @@ dependencies {
   compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
   compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.8.6'
   compile group: 'me.moocar', name: 'logback-gelf', version: '0.3'
-  compile group: 'ch.qos.logback', name: 'logback-classic'
-  compile group: 'ch.qos.logback', name: 'logback-core'
-  compile('org.projectlombok:lombok')
-  compile('org.springframework.boot:spring-boot-starter-logging')
-  compile('org.springframework.boot:spring-boot-starter-aop')
-  testCompile('org.springframework.boot:spring-boot-starter-test')
-  compile group: 'com.sparkjava', name: 'spark-core', version: '2.7.1'
+  compile('org.projectlombok:lombok:1.18.6')
+  compile("org.springframework.boot:spring-boot-starter-logging:${springBootVersion}")
+  compile("org.springframework.boot:spring-boot-starter-aop:${springBootVersion}")
+  testCompile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
+  compile group: 'com.sparkjava', name: 'spark-core', version: '2.9.0'
 }

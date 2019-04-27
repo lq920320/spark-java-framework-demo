@@ -70,12 +70,12 @@ Spark是一个有着丰富表达的，轻量级且开放的纯Java（和Kotlin�
 ### 2. 代码示例
 
 #### Getting started
-当前版本为2.7.1，更多版本可以参见[releases](https://github.com/perwendel/spark/releases)
+当前版本为2.9.0，更多版本可以参见[releases](https://github.com/perwendel/spark/releases)
 
-`compile group: 'com.sparkjava', name: 'spark-core', version: '2.7.1'`
+`compile group: 'com.sparkjava', name: 'spark-core', version: '2.9.0'`
 
 ```java
-public class SparkJavaApplication {
+public class com.SparkJavaApplication {
   public static void main(String[] args) {
     get("/hello", (req, res) -> "Hello World");
   }
@@ -85,7 +85,7 @@ public class SparkJavaApplication {
 #### 更多例子
 
 ```java
-public class SparkJavaApplication {
+public class com.SparkJavaApplication {
 
   public static void main(String[] args) {
     port(4567);
